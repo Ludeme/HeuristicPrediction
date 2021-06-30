@@ -11,6 +11,7 @@ def calculateCrossValidationRegretRegression(inputFeatures, labels, regressionMo
     inputFeaturesShuffled, labelsShuffled = Preprocessing.shuffleInput(inputFeatures, labels)
 
     for model in regressionModels:
+        totalWinRate = 0
         totalRegret = 0
 
         for leaveOneOutIndex in range(len(inputFeaturesShuffled)):
@@ -33,9 +34,12 @@ def calculateCrossValidationRegretRegression(inputFeatures, labels, regressionMo
             # Calculate the best possible heuristics for the game in the test set
             predictedHeuristicValue = labelsShuffled[leaveOneOutIndex][bestHeuristicIndex]
             actualBestHeuristicValue = max(labelsTest)
+            totalWinRate += predictedHeuristicValue
             totalRegret += actualBestHeuristicValue - predictedHeuristicValue
 
+        totalWinRate = totalWinRate / len(inputFeaturesShuffled)
         totalRegret = totalRegret / len(inputFeaturesShuffled)
 
         print("\n", type(model).__name__)
+        print("Win-Rate:", totalWinRate)
         print("Regret:", totalRegret)
